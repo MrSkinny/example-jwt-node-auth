@@ -1,12 +1,15 @@
 ## Node server with JWT Auth - example
 
+Uses a simple in-memory storage for User records, no database/password hashing etc. This was made only to demonstrate the sign in/out actions with JWTs.
+
 All endpoints expect content type JSON.
 
-HTTP authorization header must follow format:
+Protected endpoints require HTTP authorization header in following format:
 ```
 Authorization: JWT [jwt_encoded_string]
-
-ex:
+```
+Example:
+```
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjajN1eGJscnYwMDAwaHJ6eXlpZzM0ejJtIiwiaWF0IjoxNDk3MzE5NTY3LCJleHAiOjE0OTc5MjQzNjd9.3hjshab6VdWV9K_Qt_HJbhiWJdZ_oJjzPl0-vFDhwIo
 
 ```
@@ -23,7 +26,7 @@ The server generates tokens with the following payload:
 }
 ```
 
-These get stored in a `tokens` field on the User model. Every sign in generates a new token and deleted when a Sign Out occurs.
+These payload objects are stored in a `tokens` field on the User model when the token is generated. Every Sign In generates a new token and is deleted when a Sign Out occurs.
 
 The server verifies a token is valid by
 1) Decoding the JWT encoded string - this will fail if it's a malformed string or doesn't match the server secret
@@ -31,7 +34,10 @@ The server verifies a token is valid by
 
 The second step ensures that a valid JWT token still won't authorize if the user signed out from that device previously.
 
+TODO: If there was a database, you would want to periodically prune tokens that have expired to account for devices that lost the locally stored token and never send a Sign Out.
+
 ### Sign In
+
 ```
 POST /api/sessions
 
@@ -74,7 +80,7 @@ Response:
 200 - Success deleting token on User record
 ```
 
-### Protected endpoint
+### Example protected endpoint
 ```
 GET /api/users/me
 
