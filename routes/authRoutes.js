@@ -2,8 +2,6 @@ const express = require('express');
 const authRoutes = express.Router();
 const jwt = require('jsonwebtoken');
 
-const passport = require('../passport-config');
-
 const User = require('../models/User');
 
 authRoutes

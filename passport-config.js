@@ -13,12 +13,16 @@ const opts = {
 };
 
 passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
+  // this callback only runs if JWT token has successfully verified
+  // against server secret signature
+
   const user = User.findOneById(jwt_payload.sub);
   const foundToken = user.tokens.find(t => t.iat === jwt_payload.iat);
 
   if (!foundToken) {
-    done(null, false, 'Token does not exist');
+    return done(null, false, 'Token does not exist');
   }
+
   if (user) {
     done(null, user);
   } else {
