@@ -53,7 +53,7 @@ Response:
 400 - username/password omitted
 401 - user not found
 401 - invalid password
-200 - {
+201 - {
   username: string,
   token: jwt_encoded_string
 }

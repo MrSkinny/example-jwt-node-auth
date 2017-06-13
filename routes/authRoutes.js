@@ -25,7 +25,7 @@ authRoutes
       return res.status(401).json();
     }
 
-    return res.json({ token, username: user.username });
+    return res.status(201).json({ token, username: user.username });
   })
 
   .delete((req, res) => {
