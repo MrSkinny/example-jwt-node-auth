@@ -39,7 +39,7 @@ TODO: If there was a database, you would want to periodically prune tokens that 
 ### Sign In
 
 ```
-POST /api/sessions
+POST /api/auth
 
 No Authorization Header Required
 
@@ -66,7 +66,7 @@ This endpoint checks if:
 2) The token's iat (issued at) matches with a token stored in User record 
 
 ```
-DELETE /api/sessions
+DELETE /api/auth
 
 Authorization Header Required
 
@@ -76,6 +76,28 @@ Responses:
 400 - { message: Authorization header required }
 400 - { message: Authorization is malformed or invalid }
 200 - {}
+```
+
+### Create User
+
+This endpoint creates a user and performs a sign in action to generate and immediately return a token.
+```
+POST /api/users
+
+No Authorization header required
+
+Request Body: {
+  username: string,
+  password: string
+}
+
+Responses:
+400 - { message: 'Fields `username`, `password` required }
+422 - { message: 'Username already taken' }
+201 - {
+  user: object
+  token: jwt_encoded_string
+}
 ```
 
 ### Example protected endpoint

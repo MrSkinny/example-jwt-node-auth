@@ -6,6 +6,7 @@ const cors = require('./middleware/cors');
 const passport = require('./passport-config');
 const initRoutes = require('./routes');
 
+// Creates an admin user for demonstration - u: 'admin' | p: 'password'
 require('./seed');
 
 app.use(cors);
