@@ -32,7 +32,7 @@ The server verifies a token is valid by
 1) Decoding the JWT encoded string - this will fail if it's a malformed string or doesn't match the server secret
 2) Fetching the user record matching the `sub` field, and then ensuring a token exists in `tokens` with a matching `iat`
 
-The second step ensures that a valid JWT token still won't authorize if the user signed out from that device previously.
+The second step ensures that a valid signed JWT token won't authorize when a user signed out from that device prior to expiration.
 
 TODO: If there was a database, you would want to periodically prune tokens that have expired to account for devices that lost the locally stored token and never send a Sign Out.
 
@@ -49,10 +49,9 @@ Request Body:
   password: string (req)
 }
 
-Response:
-400 - username/password omitted
-401 - user not found
-401 - invalid password
+Responses:
+400 - { message: 'Fields `username`, `password` required }
+401 - {}
 201 - {
   username: string,
   token: jwt_encoded_string
@@ -73,11 +72,10 @@ Authorization Header Required
 
 Request Body: {}
 
-Response:
-400 - Missing Authorization header
-400 - Invalid JWT token or Authorization value
-422 - JWT decoded but `sub` does not exist
-200 - Success deleting token on User record
+Responses:
+400 - { message: Authorization header required }
+400 - { message: Authorization is malformed or invalid }
+200 - {}
 ```
 
 ### Example protected endpoint
@@ -86,12 +84,11 @@ GET /api/users/me
 
 Authorization Header Required
 
-
-Response:
-401 - Default passport unauthorized 
+Responses:
+401 - {} 
 200 - {
   id: string,
   username: string,
-  tokens: array (of jwt payloads)
+  tokens: array [decoded jwt payloads]
 }
 ```

@@ -10,7 +10,7 @@ authRoutes
   .post((req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
-      return res.status(400).json();
+      return res.status(400).json({ message: 'Fields `username`, `password` required' });
     }
 
     const user = User.findOneByUsername(username);
@@ -29,17 +29,17 @@ authRoutes
   .delete((req, res) => {
     const encodedToken = req.header('Authorization');
     if (!encodedToken) {
-      return res.status(400).json();
+      return res.status(400).json({ message: 'Authorization header required' });
     }
 
     const decoded = jwt.decode(encodedToken.slice(4));
     if (!decoded) {
-      return res.status(400).json();
+      return res.status(400).json({ message: 'Authorization is malformed or invalid' });
     }
 
     const { iat, sub } = decoded;
     const user = User.findOneById(sub);
-    if (!user) return res.status(422).json();
+    if (!user) return res.status(400).json({ message: 'Authorization is malformed or invalid' });
 
     user.logout(iat);
     res.json();
